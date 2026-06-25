@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habitify+</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      background: #ffffff;
+      color: #111111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #4f46e5;
+    }
+
+    .hero p {
+      margin-top: 0.75rem;
+      font-size: 1.25rem;
+      color: #555555;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .input-row input {
+      flex: 1;
+      min-width: 240px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .input-row input:focus {
+      border-color: #4f46e5;
+    }
+
+    .input-row button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: #4f46e5;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .input-row button:hover {
+      background: #4338ca;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>Habitify+</h1>
+    <p>작은 습관에서 시작하기</p>
+    <div class="input-row">
+      <input type="text" placeholder="새 습관을 입력하세요">
+      <button>추가</button>
+    </div>
+  </div>
+</body>
+</html>
