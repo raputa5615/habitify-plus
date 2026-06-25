@@ -17,7 +17,8 @@
       color: #111111;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+      padding-top: 15vh;
       min-height: 100vh;
     }
 
@@ -71,6 +72,27 @@
     .input-row button:hover {
       background: #4338ca;
     }
+
+    .habit-list {
+      list-style: none;
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+
+    .habit-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .habit-list input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #4f46e5;
+    }
   </style>
 </head>
 <body>
@@ -78,9 +100,27 @@
     <h1>Habitify+</h1>
     <p>작은 습관에서 시작하기</p>
     <div class="input-row">
-      <input type="text" placeholder="새 습관을 입력하세요">
-      <button>추가</button>
+      <input id="habitInput" type="text" placeholder="새 습관을 입력하세요">
+      <button onclick="addHabit()">추가</button>
     </div>
+    <ul class="habit-list" id="habitList"></ul>
   </div>
+  <script>
+    function addHabit() {
+      const input = document.getElementById('habitInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const li = document.createElement('li');
+      li.innerHTML = '<input type="checkbox"><span>' + text + '</span>';
+      document.getElementById('habitList').appendChild(li);
+      input.value = '';
+      input.focus();
+    }
+
+    document.getElementById('habitInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') addHabit();
+    });
+  </script>
 </body>
 </html>
