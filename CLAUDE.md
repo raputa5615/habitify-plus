@@ -16,6 +16,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - CSS
 - JavaScript
 
+## 디자인 토큰
+
+- 메인 색: `#10b981`
+- 글자 색: `#1f2937`
+- 배경 색: `#fafaf9`
+- 제목 글자: `28px`
+- 본문 글자: `16px`
+- 모서리 반경: `8px`
+
 ## Work Rules
 
 - 새 파일을 만들기 전에 항상 어디에 만들지 먼저 알려준다.
