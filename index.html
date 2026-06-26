@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Habitify+</title>
+  <title>Habitify+ - 작은 습관에서 시작하기</title>
   <style>
     * {
       margin: 0;
@@ -60,6 +60,8 @@
     }
 
     .input-row button {
+      min-width: 44px;
+      min-height: 44px;
       padding: 0.75rem 1.5rem;
       font-size: 16px;
       font-weight: 600;
@@ -129,7 +131,7 @@
       <button onclick="addHabit()">추가</button>
     </div>
     <ul class="habit-list" id="habitList"></ul>
-    <p class="empty-state" id="emptyState">첫 습관을 적어볼까요?</p>
+    <p class="empty-state" id="emptyState">오늘 어떤 습관을 만들고 싶나요?<br>작게 시작해도 좋아요.</p>
   </div>
   <script>
     // 로컬 날짜를 YYYY-MM-DD 형식으로 반환
@@ -229,7 +231,22 @@
       if (e.key === 'Enter') addHabit();
     });
 
-    // 페이지 로드 시 저장된 습관 표시
+    // 날짜가 바뀌면 done 상태 초기화
+    function resetDailyDone() {
+      const habits = loadHabits();
+      const todayStr = getLocalDate();
+      let changed = false;
+      habits.forEach(function(habit) {
+        if (habit.done && habit.lastCheckedDate !== todayStr) {
+          habit.done = false;
+          changed = true;
+        }
+      });
+      if (changed) saveHabits(habits);
+    }
+
+    // 페이지 로드 시 날짜 초기화 후 렌더링
+    resetDailyDone();
     renderAll();
   </script>
 </body>
