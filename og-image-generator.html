@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>OG 이미지 생성기 — habitify+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px;
+      gap: 20px;
+      font-family: "Noto Sans KR", sans-serif;
+    }
+    canvas {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    button {
+      padding: 14px 32px;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: "Noto Sans KR", sans-serif;
+    }
+    button:hover { background: #059669; }
+    p { color: #888; font-size: 14px; margin: 0; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="1200" height="630"></canvas>
+  <button onclick="download()">PNG 다운로드 (og-image.png)</button>
+  <p>다운로드한 파일을 프로젝트 폴더에 넣고 메타 태그 URL을 업데이트하세요.</p>
+
+  <script>
+    async function draw() {
+      await document.fonts.ready;
+
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      /* 배경 그라디언트 */
+      const bg = ctx.createLinearGradient(0, 0, 1200, 630);
+      bg.addColorStop(0, '#10b981');
+      bg.addColorStop(1, '#059669');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1200, 630);
+
+      /* 장식 원 — 우상단 */
+      ctx.beginPath();
+      ctx.arc(1160, -100, 340, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.07)';
+      ctx.fill();
+
+      /* 장식 원 — 좌하단 */
+      ctx.beginPath();
+      ctx.arc(40, 720, 300, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.fill();
+
+      /* 장식 원 — 좌상단 작게 */
+      ctx.beginPath();
+      ctx.arc(160, 120, 70, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.04)';
+      ctx.fill();
+
+      /* 메인 타이틀 */
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 108px "Noto Sans KR", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Habitify+', 600, 262);
+
+      /* 구분선 */
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(460, 332);
+      ctx.lineTo(740, 332);
+      ctx.stroke();
+
+      /* 부제목 */
+      ctx.fillStyle = 'rgba(255,255,255,0.88)';
+      ctx.font = '40px "Noto Sans KR", sans-serif';
+      ctx.fillText('작은 습관에서 시작하기', 600, 392);
+    }
+
+    function download() {
+      const link = document.createElement('a');
+      link.download = 'og-image.png';
+      link.href = document.getElementById('canvas').toDataURL('image/png');
+      link.click();
+    }
+
+    draw();
+  </script>
+</body>
+</html>
