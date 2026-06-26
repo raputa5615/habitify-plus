@@ -94,9 +94,21 @@
       accent-color: #4f46e5;
     }
 
-    .habit-list li.done span {
+    .habit-list li.done .habit-name {
       text-decoration: line-through;
       color: #aaaaaa;
+    }
+
+    .streak-badge {
+      margin-left: auto;
+      font-size: 0.9rem;
+      color: #888888;
+      white-space: nowrap;
+    }
+
+    .streak-badge.active {
+      color: #f97316;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -111,20 +123,93 @@
     <ul class="habit-list" id="habitList"></ul>
   </div>
   <script>
+    // 로컬 날짜를 YYYY-MM-DD 형식으로 반환
+    function getLocalDate(offset) {
+      const d = new Date();
+      d.setDate(d.getDate() + (offset || 0));
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    // localStorage에서 습관 목록 불러오기
+    function loadHabits() {
+      return JSON.parse(localStorage.getItem('habits') || '[]');
+    }
+
+    // localStorage에 습관 목록 저장
+    function saveHabits(habits) {
+      localStorage.setItem('habits', JSON.stringify(habits));
+    }
+
+    // 화면에 습관 하나를 렌더링
+    function renderHabit(habit, index) {
+      const li = document.createElement('li');
+      if (habit.done) li.classList.add('done');
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = habit.done;
+      cb.addEventListener('change', function() {
+        const habits = loadHabits();
+        habits[index].done = cb.checked;
+
+        if (cb.checked) {
+          const todayStr = getLocalDate();
+          const last = habits[index].lastCheckedDate;
+
+          if (last === todayStr) {
+            // 오늘 이미 체크함 - streak 유지
+          } else if (last === getLocalDate(-1)) {
+            // 어제 체크했으면 연속 - streak 증가
+            habits[index].streak = (habits[index].streak || 0) + 1;
+            habits[index].lastCheckedDate = todayStr;
+          } else {
+            // 처음이거나 하루 이상 건너뜀 - streak 1로 시작
+            habits[index].streak = 1;
+            habits[index].lastCheckedDate = todayStr;
+          }
+        }
+
+        saveHabits(habits);
+        renderAll();
+      });
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'habit-name';
+      nameSpan.textContent = habit.text;
+
+      const streak = habit.streak || 0;
+      const badge = document.createElement('span');
+      badge.className = 'streak-badge' + (streak > 0 ? ' active' : '');
+      badge.textContent = `🔥 ${streak}`;
+
+      li.appendChild(cb);
+      li.appendChild(nameSpan);
+      li.appendChild(badge);
+      return li;
+    }
+
+    // 전체 습관 목록 렌더링
+    function renderAll() {
+      const list = document.getElementById('habitList');
+      list.innerHTML = '';
+      loadHabits().forEach(function(habit, i) {
+        list.appendChild(renderHabit(habit, i));
+      });
+    }
+
     function addHabit() {
       const input = document.getElementById('habitInput');
       const text = input.value.trim();
       if (!text) return;
 
-      const li = document.createElement('li');
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.addEventListener('change', function() {
-        li.classList.toggle('done', cb.checked);
-      });
-      li.appendChild(cb);
-      li.appendChild(Object.assign(document.createElement('span'), { textContent: text }));
-      document.getElementById('habitList').appendChild(li);
+      const habits = loadHabits();
+      habits.push({ text: text, done: false, streak: 0, lastCheckedDate: null });
+      saveHabits(habits);
+      renderAll();
+
       input.value = '';
       input.focus();
     }
@@ -132,6 +217,9 @@
     document.getElementById('habitInput').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') addHabit();
     });
+
+    // 페이지 로드 시 저장된 습관 표시
+    renderAll();
   </script>
 </body>
 </html>
